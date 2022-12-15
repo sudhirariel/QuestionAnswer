@@ -1,0 +1,130 @@
+<div class="table-content">
+  <h1 style="text-align: center; margin-top:42px;">User Interface</h1>
+  <div class="col-md-4 offset-md-4">
+    <div class="text-start">
+      <button type="button" class="btn btn-primary mt-5 mb-4" (click)="openModal()">
+        Add Questions
+      </button>
+      <form>
+        <div class="card p-3" *ngIf="formDataList.length>0">
+          <div *ngFor="let item of formDataList, index">
+            <div class="form-group mb-3" *ngIf="!item.showCheckBox">
+              <strong>Question: {{item?.paragraphQuestion}} <label *ngIf="item.isRequired"
+                  class="text-danger font-italic small">*</label></strong>
+              <div class="form-group mt-2 d-flex align-items-center">
+                <label for="paraQuestion" class="me-2">Answer</label>
+                <input type="text" class="form-control" placeholder="Enter Your Answer"
+                  (change)="paraAnswer($event,item)">
+              </div>
+
+            </div>
+
+            <div *ngIf="item.showCheckBox">
+              <strong>Question: {{item?.paragraphQuestion}} <label *ngIf="item.isRequired"
+                  class="text-danger font-italic small">*</label></strong>
+              <label for="paraQuestion" class=" d-block">Answer:</label>
+              <div class="form-check mt-1" *ngFor="let i of item.checkBoxOptions,index">
+
+                <input class="form-check-input" type="checkbox" (click)="checkedAnswers($event,i,item)"
+                  [checked]="i.isSelected">
+                <label class="form-check-label" for="paraQuestion">{{i.value}}</label>
+              </div>
+            </div>
+          </div>
+          <p class="text-danger m-0">{{errorMessage ?? ''}}</p>
+        </div>
+      </form>
+      <br>
+      <button *ngIf="formDataList.length>0" (click)="submitDynamicForm()" class="btn btn-outline-primary btn-sm">
+        <a class="list-group-item list-group-item-action py-2 ripple" aria-current="true">
+          <i class="fas fa-tachometer-alt fa-fw me-3"></i><span>Review my answers ></span>
+        </a></button>
+
+
+    </div>
+  </div>
+  <div>
+    <div>
+      <!-- <input type="button" (click)="getFilledValues()" > -->
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" (click)="doSomething()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"
+            (click)="openParagraphInput()">
+          <label class="form-check-label" for="flexRadioDefault1">
+            Paragraph
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"
+            (click)="openSelectBox()">
+          <label class="form-check-label" for="flexRadioDefault2">
+            Check Box list
+          </label>
+        </div>
+        <!-- form starts  -->
+        <form [formGroup]="paraForm" *ngIf="showForm" id="paragraphForm">
+          <div class="form-group mt-2" *ngIf="IsPara">
+            <label for="paraQuestion">Question</label>
+            <input type="text" class="form-control" id="paraQuestion" formControlName="paraQuestion"
+              placeholder="Enter Your Question" />
+            <div *ngIf="paraForm.get('paraQuestion')?.errors && paraForm.get('paraQuestion')?.hasError('required')">
+              Question is required
+            </div>
+          </div>
+
+
+          <ng-template [ngIf]="IsBox">
+            <div class="form-group mt-2">
+              <div class="form-group mt-2">
+                <label for="paraQuestion">Question</label>
+                <input type="text" class="form-control" id="paraQuestion" formControlName="paraQuestion"
+                  placeholder="Enter Your Question" />
+                <div *ngIf="paraForm.get('paraQuestion')?.errors && paraForm.get('paraQuestion')?.hasError('required')">
+                  Question is required
+                </div>
+              </div>
+              <div *ngFor="let value of values; let i = index">
+                <input type="text" #name [ngModel]="value.value" [ngModelOptions]="{standalone: true}" name="value{{i}}"
+                  class="mt-2" (ngModelChange)="getValue(i,name.value)" placeholder="{{value.placeHolder}}">
+                <button class="ml-2" (click)="removevalue(i)">Remove</button>
+              </div>
+            </div>
+            <button class="btn btn-primary mt-2" (click)="addvalue()"> Add Another answer</button>
+          </ng-template>
+          <br>
+          <div class="form-check mt-2">
+            <input type="checkbox" formControlName="checkBoxQuestion" id="checkBoxQuestion" class="form-check-input" />
+            <!-- <input type="checkbox" (change)="toggleVisibilityAns($event)" class="form-check-input"/> -->
+            <label>Allow user to specify their own answer</label>
+          </div>
+          <div class="form-check mt-2">
+            <input type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="isRequired"
+              (change)="toggleVisibility($event)" class="form-check-input" />
+            <p>This field is required</p>
+          </div>
+          <button type="button" (click)="saveData()" class="btn btn-primary mt-1 mb-1">
+            Submit
+          </button>
+        </form>
+        <!-- form ends -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="doSomething()">close</button>
+      </div>
+    </div>
+  </div>
+</div>

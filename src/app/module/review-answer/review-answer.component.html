@@ -1,0 +1,28 @@
+
+<div class="mt-5" style="margin-left: 50px;">
+<div class="container-fluid">
+<ng-template class="mt-5" [ngIf]="reviewList.length">  
+    <div class="list-group my-2">
+      <div *ngFor="let item of reviewList, index" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1">Question: {{item.paragraphQuestion}}</h5>
+        </div>
+        <p class="mb-1">Answer: {{item.paraAnswer}}</p>
+        <ng-template [ngIf]="item.showCheckBox">
+          <div *ngFor="let option of item.checkBoxOptions">
+            <div class="form-check"  *ngIf="option.isSelected">             
+              <label class="form-check-label" for="flexCheckChecked">
+                {{option.value}}
+              </label>
+            </div>
+          </div>
+        </ng-template>
+        
+      </div>
+    </div>
+    <button routerLink="/" type="button" class="btn btn-outline-primary">
+      Back to home
+    </button>
+</ng-template>
+</div>
+</div>
